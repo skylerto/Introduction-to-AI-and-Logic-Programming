@@ -1,0 +1,150 @@
+EECS 3401 
+ASSIGNMENT 1
+DEADLINE: February 10, 2016
+
+
+                  KNOWLEDGE REPRESENTATION and CPL
+
+PROBLEM I. Let us consider a lab door designed in such a way that to open it you
+need a magnetic key. To open the door, one has to tap a magnetic lock with the
+key being held in one hand while the door is pulled open with the other hand.
+Suppose that we want an android (AN) to open the door for us.
+
+The KB of AN should hold, among other facts, information about possible actions AN
+can perform. Some of these actions are:
+
+A1. TURN LOCK ON: to turn the lock "on" the following preconditions must be true:
+    the lock is "off" and a key touches the magnetic lock. The effect of this action is that
+    the lock changes its state from "off" into "on" and that the door can be opened.
+ 
+A2. PULL-DOOR: to pull the door open not only the door can be opened but also AN has to
+    pull the door's handle.
+
+A3. RELEASE LOCK: this action turns the lock "off" and this is accomplished when AN is
+    not touching magnetic lock with the key.
+
+A4. TOUCH_LOCK: to touch the lock, AN has to have a key. The result of this action is that the
+    key is touching the lock.
+
+Use the following variables to represent A1, A2, and A3 in CPL:
+
+  p_off is a propositional variable that denotes the fact that the
+        lock is off;                                                                                                                   
+  p_on is a propositional variable that denotes the fact that the lock                                                                 
+        is on;                                                                                                                         
+  p_key  is a propositional variable that denotes the fact that AN has a key to magnetic lock;
+  p_h  is a propositional variable that denotes the fact that AN pulls the door handle;
+  p_t  is a propositional variable that denotes the fact that the key touches magnetic lock;
+  p_opened is a propositional variable that denotes the fact that the
+        door is opened;
+  p_can is a propositional variable that denotes the fact that the door
+        can be opened when its handle is pulled.
+
+
+Represent actions as implications of the form
+           preconditions -> effects
+
+Use the above variables to represent the query:
+
+C. if lock is off, the door is closed, and AN has a key, then the door can be opened.
+
+
+PROBLEM 2: We have defined a set KB of formulas of CPL to be inconsistent,
+           if for no tva h, h(KB)={1}. Show that the following
+           conditions are equivalent:
+             (i) KB is inconsistent
+            (ii) for every formula A, KB |- A
+           (iii) KB |- p & ~p.
+
+In your proof, use that fact that for every formula B,
+
+  KB |- B if and only if for every tva h, if h(KB)={1}, then h(B)=1.
+  
+Please note that "tva" is an abbreviation of "truth-value assignment".
+
+
+
+II.                  RESOLUTION RULE: PROPOSITIONAL CASE
+
+PROBLEM 3. Which of the following sets of clauses are inconsistent? Justify your answers by
+   either giving a refutation tree or by defining an interpretation that satisfies all the
+   clauses in a given set.
+
+(a) {-s, p, q, s v -p v -q},
+(b) {-q v -s v -p, s, s v q, p v s, p v q, p v -q, q v -p},
+(c) {-p v -q v -s, p v -t, -t, q v -t v -p},
+(d) {-p v -s, t v -p, q v -s, q v t, -q v -t, p v s, t v -s, q v -p}.
+
+
+PROBLEM 4: Consider the android AN described in Problem 1. Suppose that its
+         KB consists of just the action formulas A1, A2, and A3,
+i.e., that KB={A1, A2, A3}, and that the reasoning module of AN is
+implemented as a resolution proof system for classical logic. AN's
+reasoning task is to determine whether or not it can open the door, i.e.,
+its task is to answer the query
+                  KB |- C.
+How will AN answer this query? Show all the necessary steps.
+
+
+PROBLEM 5. Resolution
+In their paper [1], Nayak and Williams discuss the following small
+fragment of propositional knowledge base used for on-board real-time
+diagnosis and recovery for NASA's DS-1 spacecraft:
+
+A1. If bus is inactive or, if there is no command input to bus
+    and bus is active, then there is no command output from
+    the bus.
+
+A2. Either bus is not operating normally and bus is inactive,
+    or bus is neither unrecoverably failed nor recoverably
+    failed.
+
+A3. If bus is operating normally, then bus is active.
+
+A4. If bus is recoverably failed, then bus is not unrecoverably
+    failed.
+
+A5. If bus is active, then bus is not inactive.
+
+Use the resolution rule to determine whether or not the
+following information is `known' to DS-1:
+
+Q.  If bus is operating normally, then bus is active,
+    bus is not inactive, and bus is neither recoverably
+    nor unrecoverably failed.
+
+In your answer use the following variables:
+
+k: bus is operating normally
+r: bus is recoverably failed
+u: bus is unrecoverably failed
+a: bus is active
+n: bus is inactive
+i: no command input to bus
+o: no command output from the bus
+
+References
+[1] Nayak, P. and Williams, B. 1997. Fast Context
+    Switching in Real-time Propositional Reasoning. In Proc. of
+    the Fourteenth National Conference on Artificial Intelligence,
+    50--56.
+    
+
+PROBLEM 6. This problem deals with the issue of efficiency of resolution-based
+   reasoning. Before defining the problem, let us define a clause C to be tautological
+   if C contains at least one pair of complementary literals (such as p and ~p).
+   For instance, q v p v r v ~q is tautological while q v p v r is not. It turns out
+   that tautological clauses are useless as far as the resolution-based reasoning is 
+   concerned. Such clauses should be discarded as soon as they are deduced to prevent
+   possible resolution with them. This fact is based on the following statement:
+
+   (T) Let S be a set of clauses and let C be a tautological clause in S. Then, S is
+       consistent iff S-{C} is consistent.
+   
+   Prove T. 
+
+III.                  RESOLUTION RULE: PREDICATE LOGIC CASE
+
+PROBLEM 7. tba
+PROBLEM 8. tba
+PROBLEM 9. tba
