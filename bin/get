@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+
+module Stats
+
+    # => Username on remote directory
+    USER = "cse23170" 
+    
+    # => Remote address
+    REMOTE = "red.cse.yorku.ca" 
+
+    # => Directory for assignment
+    DIRECTORY = "/cs/course/3401/assignment"
+    # => Local directory for assignment
+    LOCAL = "."
+
+    # => Define the address and assignment to get 
+    def Stats.address
+        "#{Stats::USER}@#{Stats::REMOTE}:#{Stats::DIRECTORY}#{ARGV[0]}"
+    end
+
+    def Stats.command
+        "rsync #{Stats.address} #{Stats::LOCAL}"
+    end
+
+    def Stats.get
+        exec Stats.command
+    end
+end
+
+# => Final command
+puts Stats.get
+
+# => Get using rsync because no gems
