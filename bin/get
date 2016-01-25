@@ -11,16 +11,24 @@ module Stats
 
     # => Directory for assignment
     DIRECTORY = "/cs/course/3401/assignment"
+
+    # => Get the assignment name
+    def Stats.assignment
+        ARGV[0]
+    end
+
     # => Local directory for assignment
-    LOCAL = "."
+    def Stats.local
+        "assignment#{Stats.assignment}/"
+    end
 
     # => Define the address and assignment to get 
     def Stats.address
-        "#{Stats::USER}@#{Stats::REMOTE}:#{Stats::DIRECTORY}#{ARGV[0]}"
+        "#{Stats::USER}@#{Stats::REMOTE}:#{Stats::DIRECTORY}#{Stats.assignment}"
     end
 
     def Stats.command
-        "rsync #{Stats.address} #{Stats::LOCAL}"
+        "rsync #{Stats.address} #{Stats.local}"
     end
 
     def Stats.get
