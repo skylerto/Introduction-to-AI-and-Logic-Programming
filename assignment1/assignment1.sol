@@ -50,8 +50,6 @@ SOLUTION
     -- no tva h, h(KB)={1}
     -- i.e. there is no truth value association that will give us True for p & ~p
 
-    TODO: Apply resolution rule.
-
 
 II.                  RESOLUTION RULE: PROPOSITIONAL CASE
 
