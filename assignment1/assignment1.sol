@@ -38,8 +38,8 @@ SOLUTION
 PROBLEM 2:
 SOLUTION
   (i) -> (ii)
+    -- If a KB is inconsistent then it must be the case that we have a contradiction.
     -- no tva h, h(KB)={1}
-    --
 
   (ii) -> (iii)
     -- for all A, KB |- A
@@ -48,6 +48,7 @@ SOLUTION
 
   (iii) -> (i)
     -- no tva h, h(KB)={1}
+    -- i.e. there is no truth value association that will give us True for p & ~p
 
     TODO: Apply resolution rule.
 
