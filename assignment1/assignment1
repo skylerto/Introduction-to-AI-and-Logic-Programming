@@ -1,4 +1,4 @@
-EECS 3401 
+EECS 3401
 ASSIGNMENT 1
 DEADLINE: February 10, 2016
 
@@ -16,7 +16,7 @@ can perform. Some of these actions are:
 A1. TURN LOCK ON: to turn the lock "on" the following preconditions must be true:
     the lock is "off" and a key touches the magnetic lock. The effect of this action is that
     the lock changes its state from "off" into "on" and that the door can be opened.
- 
+
 A2. PULL-DOOR: to pull the door open not only the door can be opened but also AN has to
     pull the door's handle.
 
@@ -29,16 +29,16 @@ A4. TOUCH_LOCK: to touch the lock, AN has to have a key. The result of this acti
 Use the following variables to represent A1, A2, and A3 in CPL:
 
   p_off is a propositional variable that denotes the fact that the
-        lock is off;                                                                                                                   
-  p_on is a propositional variable that denotes the fact that the lock                                                                 
-        is on;                                                                                                                         
+        lock is off;
+  p_on is a propositional variable that denotes the fact that the lock
+        is on;
   p_key  is a propositional variable that denotes the fact that AN has a key to magnetic lock;
   p_h  is a propositional variable that denotes the fact that AN pulls the door handle;
   p_t  is a propositional variable that denotes the fact that the key touches magnetic lock;
   p_opened is a propositional variable that denotes the fact that the
         door is opened;
   p_can is a propositional variable that denotes the fact that the door
-        can be opened when its handle is pulled.
+        can be opened.
 
 
 Represent actions as implications of the form
@@ -54,12 +54,12 @@ PROBLEM 2: We have defined a set KB of formulas of CPL to be inconsistent,
            conditions are equivalent:
              (i) KB is inconsistent
             (ii) for every formula A, KB |- A
-           (iii) KB |- p & ~p.
+           (iii) KB |- p & -p.
 
 In your proof, use that fact that for every formula B,
 
   KB |- B if and only if for every tva h, if h(KB)={1}, then h(B)=1.
-  
+
 Please note that "tva" is an abbreviation of "truth-value assignment".
 
 
@@ -85,6 +85,7 @@ its task is to answer the query
                   KB |- C.
 How will AN answer this query? Show all the necessary steps.
 
+Will the answer be different if A4 is added to KB?
 
 PROBLEM 5. Resolution
 In their paper [1], Nayak and Williams discuss the following small
@@ -128,23 +129,39 @@ References
     Switching in Real-time Propositional Reasoning. In Proc. of
     the Fourteenth National Conference on Artificial Intelligence,
     50--56.
-    
+
 
 PROBLEM 6. This problem deals with the issue of efficiency of resolution-based
    reasoning. Before defining the problem, let us define a clause C to be tautological
-   if C contains at least one pair of complementary literals (such as p and ~p).
-   For instance, q v p v r v ~q is tautological while q v p v r is not. It turns out
-   that tautological clauses are useless as far as the resolution-based reasoning is 
+   if C contains at least one pair of complementary literals (such as p and -p).
+   For instance, q v p v r v -q is tautological while q v p v r is not. It turns out
+   that tautological clauses are useless as far as the resolution-based reasoning is
    concerned. Such clauses should be discarded as soon as they are deduced to prevent
    possible resolution with them. This fact is based on the following statement:
 
    (T) Let S be a set of clauses and let C be a tautological clause in S. Then, S is
        consistent iff S-{C} is consistent.
-   
-   Prove T. 
+
+   Prove T.
 
 III.                  RESOLUTION RULE: PREDICATE LOGIC CASE
 
-PROBLEM 7. tba
-PROBLEM 8. tba
-PROBLEM 9. tba
+PROBLEM 7.
+ Use the unification algorithm (Textbook, p. 328) to determine
+if the following sets are unifiable and, if they are, provide a (most general)
+unifier:
+
+ (a) {p(f(Y),W,g(Z)), p(U,U,V)}
+ (b) {q(X,h(Z),h(X)), q(g(a,Y),h(b),h(Y))}
+ (c) {p(a,X,f(g(Y))), p(Z,h(Z,W),f(W))}
+
+PROBLEM 8.
+Consider the following set of predicate logic clauses:
+
+KB2 = {q(X,f(Y,a)):- ; p(X):- ; r(X,g(T)):- q(Z,T)},
+
+and query r(Z,T) v p(T).
+
+Use resolution to determine whether or not this query is
+true on the basis of KB. If it is, provide a refutation and
+a refutation tree.
