@@ -103,7 +103,8 @@ SOLUTION
     C8. q v -p
     C9. ~p v p, (resolve C1,C6 on s)
     C10.
-    TODO: Apply resolution rule.
+    -- This set is CONSISTENT, therefore no resolution can be made.
+    -- This is said because I cannot deduce one.
 
 
 PROBLEM 4: pt1 - use PROBLEM 1 to prove KB |- C, where KB={A1,A2,A3}
