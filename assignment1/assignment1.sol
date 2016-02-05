@@ -12,7 +12,7 @@ SOLUTION
   A1. TURN LOCK ON
     ENGLISH: (lock off) & (key touched lock) -> (lock on)
     PROP_LOGIC: p_off & p_t -> ~p_off
-    CNF: ~p_off v ~p_t v ~ p_off
+    CNF: ~p_off v ~p_t
 
   A2. PULL_DOOR
     ENGLISH: (door can be opened) & (AN pulls handle)
@@ -111,30 +111,33 @@ PROBLEM 4: pt1 - use PROBLEM 1 to prove KB |- C, where KB={A1,A2,A3}
 
 SOLUTION
 
-A1. ~p_off v ~p_t v ~ p_off
+A1. ~p_off v ~p_t
 A2. p_can & p_h
 A3. p_t v p _off
 C: ~p_off v p_opened v ~p_key v p_can
 
   pt1 - use PROBLEM 1 to prove KB |- C, where KB={A1,A2,A3}
+    pt1 SOLUTION
     KB |- C
     KB \/ {~C}
 
-    C1. ~p_off v ~p_t v ~ p_off
+
+    C1. ~p_off v ~p_t
     C2. p_can
     C3. p_h
     C4. p_t v p _off
-    C5: p_off & ~p_opened & p_key & ~p_can
-    -- RESOLVE C2, C5 using p_can
-    C6. p_off & ~p_opened & p_key
-    -- RESOLVE
+    C5. p_off
+    C6. ~p_opened
+    C7. p_key
+    C8. ~p_can
+    -- RESOLVE C2, C8 using p_can
+    C9. ⃞
+    -- therefore INCONSISTENT, C must be know in KB.
 
-    TODO: Apply resolution rule.
-
-A4. ~p_key v p_t
+    A4. ~p_key v p_t
   pt2 - Will the SOLUTION to pt1 be different if A4 is added to KB?
-
-  TODO: Apply resolution rule.
+    pt2 SOLUTION
+      Because the solution already exists if we add on another clause, A4, the solution should remain.
 
 
 PROBLEM 5:
@@ -149,12 +152,24 @@ o: no command output from the bus
 
 SOLUTION
   A1. n v (i & a) -> o
+      ~(n v (i & a)) v o
+      ~n v ~(i & a) v o
+      ~n v ~i v ~a v o
+
   A2. (~k & n) v ~(~u v r)
   A3. k -> a
-  A4. r -> ~u
-  A5. a -> n
+      ~k v a
 
+  A4. r -> ~u
+      ~r v ~u
+
+  A5. a -> n
+      ~a v n
+  --
   Q. ~k -> (a & ~(r v u))
+      k v (a & ~(r v u))
+      k v (a & (~r v ~u))
+
 
   TODO: Apply resolution rule.
 
