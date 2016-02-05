@@ -149,13 +149,13 @@ III.                  RESOLUTION RULE: PREDICATE LOGIC CASE
 PROBLEM 7.
 SOLUTION
   (a) {p(f(Y),W,g(Z)), p(U,U,V)}
-  --
+  -- They are unifiable with unification e=[f(Y)/U,W/U,g(Z)/V]
 
   (b) {q(X,h(Z),h(X)), q(g(a,Y),h(b),h(Y))}
-  --
+  -- They are unifiable with unification e=[X/g(a,Y),Z/b, h(X)/h(Y)]
 
   (c) {p(a,X,f(g(Y))), p(Z,h(Z,W),f(W))}
-  --
+  -- They are unifiable with unification e=[a/Z,X/h(Z,W),g(Y)/W]
 
 PROBLEM 8.
 KB2 = {
