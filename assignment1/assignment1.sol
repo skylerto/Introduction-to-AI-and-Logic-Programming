@@ -22,7 +22,7 @@ SOLUTION
   A3. RELEASE LOCK
     ENGLISH: (key not touching lock) -> (lock off)
     PROP_LOGIC: ~p_t ->p _off
-    CNF:
+    CNF: p_t v p _off
 
   A4. TOUCH_LOCK
     ENGLISH: (has key) -> (key touches)
@@ -33,7 +33,7 @@ SOLUTION
   opened.
 
     PROP_LOGIC: p_off & ~p_opened & p_key -> p_can
-    CNF:
+    CNF: ~p_off v p_opened v ~p_key v p_can
 
 PROBLEM 2:
 SOLUTION
@@ -48,6 +48,8 @@ SOLUTION
 
   (iii) -> (i)
     -- no tva h, h(KB)={1}
+
+    TODO: Apply resolution rule.
 
 
 II.                  RESOLUTION RULE: PROPOSITIONAL CASE
@@ -101,16 +103,38 @@ SOLUTION
     C8. q v -p
     C9. ~p v p, (resolve C1,C6 on s)
     C10.
+    TODO: Apply resolution rule.
+
 
 PROBLEM 4: pt1 - use PROBLEM 1 to prove KB |- C, where KB={A1,A2,A3}
            pt2 - Will the SOLUTION be different if A4 is added to KB?
 
 SOLUTION
+
+A1. ~p_off v ~p_t v ~ p_off
+A2. p_can & p_h
+A3. p_t v p _off
+C: ~p_off v p_opened v ~p_key v p_can
+
   pt1 - use PROBLEM 1 to prove KB |- C, where KB={A1,A2,A3}
     KB |- C
     KB \/ {~C}
 
-  pt2 - Will the SOLUTION be different if A4 is added to KB?
+    C1. ~p_off v ~p_t v ~ p_off
+    C2. p_can
+    C3. p_h
+    C4. p_t v p _off
+    C5: p_off & ~p_opened & p_key & ~p_can
+    -- RESOLVE C2, C5 using p_can
+    C6. p_off & ~p_opened & p_key
+    -- RESOLVE
+
+    TODO: Apply resolution rule.
+
+A4. ~p_key v p_t
+  pt2 - Will the SOLUTION to pt1 be different if A4 is added to KB?
+
+  TODO: Apply resolution rule.
 
 
 PROBLEM 5:
@@ -132,6 +156,8 @@ SOLUTION
 
   Q. ~k -> (a & ~(r v u))
 
+  TODO: Apply resolution rule.
+
 PROBLEM 6:
   (T) Let S be a set of clauses and let C be a tautological clause in S. Then, S is
       consistent iff S-{C} is consistent.
@@ -140,8 +166,8 @@ PROBLEM 6:
 
   To prove T we must prove the S is consistent with or without C, i.e. that S is consistent regardless of C.
 
-
-
+  TODO: Prove the same with or without C.
+  TODO: If a -> b prove ~b -> ~a.
 
 
 III.                  RESOLUTION RULE: PREDICATE LOGIC CASE
