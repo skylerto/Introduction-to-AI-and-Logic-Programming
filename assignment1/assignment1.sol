@@ -158,7 +158,33 @@ SOLUTION
   --
 
 PROBLEM 8.
-SOLUTION
-  KB2 = {q(X,f(Y,a)):- ; p(X):- ; r(X,g(T)):- q(Z,T)},
+KB2 = {
+        q(X,f(Y,a)):- ;
+        p(X):- ;
+        r(X,g(T)):- q(Z,T)
+      }
 
-  and query r(Z,T) v p(T).
+and query (k) r(Z,T) v p(T).
+SOLUTION
+KB u {~k} = {
+        q(X,f(Y,a)):- ;
+        p(X):- ;
+        r(X,g(T)):- q(Z,T);
+        :- r(Z,T),p(T)
+      }
+
+    C1. q(X,f(Y,a)):-
+    C2. p(X):-
+    C3. r(X,g(T)):- q(Z,T)
+    -- INSERT QUERY AS C4
+    C4. :- r(Z,T),p(T)
+    -- RESOLVE C1, C3 ON q WITH UNIFICATION e1=[X/Z,f(Y,a)/T]
+    -- q(Z,T),r(x,g(T)) :- q(Z,T)
+    C5. r(x,g(T)) :-
+    -- RESOLVE C2, C4 ON p WITH UNIFICATION e2=[X/T]
+    -- p(T) :- r(Z,T),p(T)
+    C6. :- r(Z,T)
+    -- RESOLVE C5, C6 WITH UNIFICATION e3=[g(T)/T]
+    -- r(Z,T) :- r(Z,T)
+    C7. :-
+    QED
