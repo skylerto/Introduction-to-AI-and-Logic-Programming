@@ -181,8 +181,14 @@ PROBLEM 6:
 
   To prove T we must prove the S is consistent with or without C, i.e. that S is consistent regardless of C.
 
-  TODO: Prove the same with or without C.
-  TODO: If a -> b prove ~b -> ~a.
+SOLUTION
+  -- If C is some tautology: q v ~q and S is some consistent KB.
+  -- then S u C is logically equivalent to S u T, where T is true.
+  -- it follows that is S is consistent, union with T it is still consistent.
+
+  -- in contrast, if S is consistent and C is some tautology in S
+  -- then it follows that S\{T} is also consistent.
+
 
 
 III.                  RESOLUTION RULE: PREDICATE LOGIC CASE
