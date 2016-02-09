@@ -167,11 +167,17 @@ SOLUTION
       ~a v n
   --
   Q. ~k -> (a & ~(r v u))
-      k v (a & ~(r v u))
-      k v (a & (~r v ~u))
+  Q1. k v (a & ~(r v u))
+    -- Using resolution on A3
+  Q2. a v (a & ~(r v u))
+    -- Using resolution on A4.
+  Q3. a v (a & ~(r v ~r))
+    -- Apply simplifications
+  Q4. a v (a & F)
+    -- Apply simplifications
+  Q5. a
 
-
-  TODO: Apply resolution rule.
+  Therefore this is known given our knowledge base, and the query.
 
 PROBLEM 6:
   (T) Let S be a set of clauses and let C be a tautological clause in S. Then, S is
