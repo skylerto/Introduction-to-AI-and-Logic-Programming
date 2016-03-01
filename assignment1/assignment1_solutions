@@ -1,0 +1,236 @@
+ASSIGNMENT 1: SOLUTIONS
+
+PROBLEM 1. 1%
+
+A1. (p_off & p_t) -> (p_can & p_on)
+A2. (p_can & p_h) -> p_opened
+A3. -p_t -> p_off
+A4. p_key -> p_t 
+  
+C. (p_off & -p_opened & p_key) -> p_can  
+
+PROBLEM 2: 1.5% 
+0.6% for (i) -> (ii)
+0.3% for (ii) -> (iii)
+0.6% for (iii) -> (i)
+
+We prove this sequence of implications:
+  (i) -> (ii) -> (iii) -> (i)
+
+(i) -> (ii):
+Suppose that KB is inconsistent but for some A, KB|-A is not true. This means that
+for some truth-value assignment h, h(KB)={1} and h(A)=0. Since  h(KB)={1}, KB would be consistent.
+(ii) -> (iii)
+Since for every formula A, KB |- A, let A=p & -p. So, KB |- p & -p.
+(iii) -> (i)
+Suppose that KB |- p & -p and KB is consistent. So, there is a truth-value assignment h, 
+such that h(KB)={1}. Since KB |- p & -p (and using the definition of |-), this would mean
+that h(p & -p)=1 which is impossible. So, KB must be inconsistent.
+
+PROBLEM 3. 1.5%
+  (a) 0.3%
+  (b) 0.4%
+  (c) 0.2%
+  (d) 0.6% 
+
+(a)
+            p   q   -s  s v -p v -q
+            *   *    *  *
+            |    |   | /
+            |    \   |/
+             \    \  *-p v -q
+              \    \ |
+               \     * -p
+                \   / 
+                 \ /
+                  * []
+                  
+By Robinson's theorem, this set is inconsistent.
+      
+(b) 
+        pvq  q v-p  s  -q v -s v -p  p v-q 
+           *  *     *  *             *
+            \/       \/             /
+             * q     * -q v -p     /
+             |\     /             /
+             | \   /    ---------/   
+             |  \ /    / 
+             \   *-p  /
+              \   \  /
+               \   \/
+                \   * -q
+                 \  /
+                  \/
+                  []
+By Robinson's theorem, this set is inconsistent.
+         
+
+(c) Consistent: the tva h(p)=0, h(t)=0 evaluates all the formulas of this set to 1.
+
+(d) 
+       p v s  t v -s  t v -p    p v s  t v -s  -q v -t  q v -s
+          *   *       *         *          *       *   *
+           \ /       /          |          |        \ /
+            * p v t /           |          |         * -t v -s
+             \     /            |          |        /
+              \   /             |          | ------/      
+               \ /              |          |/
+                * t             |          * -s
+                |        q v -p |         /
+                |         *     | /------/
+                |         |     |/
+                |          \    * p
+                 \  -q v -t \  /
+                  \      *   * q
+                   \      \ /
+                    \      * -t
+                     \    /
+                      \  /
+                       * []
+                       
+By Robinson's theorem, this set is inconsistent.
+  
+
+PROBLEM 4. 1.5% 
+0.5% for part dealing with {A1, A2, A3}|-C
+  1% for part dealing with {A1, A2, A3, A4}|-C
+
+If KB={A1, A2, A3}, then AN will answer the query
+                  KB |- C.
+NO since KB union {-C} is consistent. To see this, 
+consider the following truth-value assignment h:
+
+h(p_off)=h(p_key)=1 and h(p_opened)= h(p_can)=0.
+All formulas in  KB union {-C} are true under this assignment showing that  KB union {-C}  is consistent
+which, in turn, means that KB|-C is false.
+
+However, if we add A4 to KB, then things are different entirely. Let us convert A1, A2, A3, A4, and -C:
+into clauses:
+
+c1. -p_off v  -p_t v p_can            (from A1)
+c2. -p_off v -p_t v p_can v p_on      (from A1)
+c3. -p_can v -p_h v p_opened          (from A2)
+c4. p_t v p_off                       (from A3)
+c5. -p_key v pt                       (from A4)
+
+c6. p_off               (from -C)
+c7. -p_opened           (from -C)
+c8. p_key               (from -C)
+c9. -p_can              (from -C)
+
+Refutation of KB union {-C} consists of clauses c1 to c8 and:
+
+c10.  -p_t v p_can        (reolvent of c1 and c6 upon p_off)
+c11. -p_t                 (reolvent of c10 and c9 upon p_can)
+c12. -p_key               (reolvent of c11 and c5 upon p_t)
+c13. []                   (reolvent of c12 and c6 upon p_key)
+
+To conclude, with A4 added, KB|-C or AN "knows" C.
+
+PROBLEM 5. 1.5%
+
+Translation of A1--A5 and -Q into classical logic formulas
+
+A1. (n v (i & a))-> o
+    clauses:  
+      1. o v -n
+      2. o v -i v -a
+A2. (-k & n) v (-r & -u)
+    clauses:
+      3. -k v -r
+      4. -k v -u
+      5. n v -r 
+      6. n v -u
+A3. k->a
+     clauses:
+      7. a v -k
+A4. r->-u
+      clauses:
+      8. -r v -u
+A5. a->-n
+      clauses:
+      9. -a v -n,
+-Q.  -(k->(a &(-n &(-r & -u))))
+      clauses:
+       10. k
+       11. n v r v u v -a
+    clauses as disjunctions        clauses using ":-" notation
+11. n v r v u v -a,                n,r,u:-s
+10. k,                             k:-
+9. -a v -n,                         :-a,n
+8. -r v -u,                         :-r,u
+7. a v -k,                         a:-k
+6. n v -u,                         n:-u
+5. n v -r,                         n:-r
+4. -k v -u,                         :-k,u
+3. -k v -r,                         :-k,r
+2. o v -i v -a,                    o:-i,a
+1. o v -n,                         o:-n
+
+Possible refutation:
+
+10. k,  (given)
+4. -k v -u, (given)
+12. -u, (resolvent of 10, 4)
+3. -k v -r, (given)
+13. -r,   (resolvent of 10, 3)
+7. a v -k, (given)
+14. a,  (resolvent of 10, 7)
+9. -a v -n, (given)
+15. -n,  (resolvent of 14, 9)
+11. n v r v u v -a, (given)
+16. n v r v u, (resolvent of 11, 14)
+17. n v r,   (resolvent of 16, 12)
+18. n,     (resolvent of 17, 13)
+19. empty clause      (resolvent of 18, 15)
+
+So, Q logically follows from knowledge base.
+
+
+PROBLEM 6. 1%
+
+Let S be  a set of clauses with a tautological clause C. We shall 
+prove that S is consistent if and only if S-{C} is consistent. 
+If S is consistent, then, for some truth-value assignment (tva) h, h(S)={1}.
+Clearly, h(S-{C})={1} which means that S-{C} is consistent.
+
+Now, suppose that S-{C} is consistent. So, there is a tva h such that h(S-{C})={1}.
+Since C is tautological, for some variable p, both p and -p are in C. So, h(C)=1. Since
+h(S-{C})={1} and h(C)=1, we must also have h(S)={1}, as required.
+
+PROBLEM 7. 1%
+0.3% for (a) and (c), 0.4% for (b)
+
+ (a) {p(f(Y),W,g(Z)), p(U,U,V)}
+     is unifiable with [W/U, U/f(Y), V/g(Z)].
+
+ (b) {q(X,h(Z),h(X)), q(g(a,Y),h(b),h(Y))}
+     This set is not unifiable.
+     while the substitution
+     e=[X/g(a,Y),Z/b]
+     partially unifies these two terms resulting in:
+     q(g(a,Y),h(b),h(g(a,Y)))  and  q(g(a,Y),h(b),h(Y))
+     
+     the third arguments: h(g(a,Y)) and h(Y) cannt be unified since Y and g(a,Y)
+     cannot be unified.
+     
+ (c) {p(a,X,f(g(Y))), p(Z,h(Z,W),f(W))}
+     is unifiable with [X/h(a,g(Y)), Z/a, W/g(Y)]
+
+      
+Problem 8. 1%
+
+KB2 = {q(X,f(Y,a)):- ; p(X):- ; r(X,g(T)):- q(Z,T)},
+
+query = r(Z,T) v p(T).
+
+We use resolution to determine whether or not this query is
+true on the basis of KB.
+
+Negated query:
+:- r(Z,T)
+:- p(T)
+
+c1. :- p(T)
+c2. p(X):-
+c3. []  (resolvent of c1 and c2 with unifier [X/T])
