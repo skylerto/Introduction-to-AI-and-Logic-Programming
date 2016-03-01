@@ -1,0 +1,69 @@
+EECS 3401
+Assignment 2
+Deadline  March. 7, 2016
+
+PROBLEM 1.
+The following three sentences define a grandfather:
+
+(1) X is a grandfather of Z, if X is the father of Y and Y is a parent of Z.
+(2) The father of Y is a parent of Y.
+(3) The mother of Y is a parent of Y.
+
+Given the following facts:
+(4) adam is the father of beth and bill.
+(5) beth is the mother of chris.
+(6) bill is the father of ann.
+
+find all grandchildren of adam by doing the following:
+
+A. Convert (1)-(6) into clauses. Use the following predicates:
+
+   gf(X,Y) - to denote the fact that X is a grandfather of Y;
+   f(X,Y) - to denote the fact that X is the father of Y;
+   m(X,Y) -  to denote the fact that X is the mother of Y;
+   p(X,Y) -  to denote the fact that X is a parent of Y;
+   
+B. Formulate an appropriate query to solve the problem (of finding all grandchildren of adam).
+
+C. Construct a complete SLD search tree for appropriate clauses indicating the solutions.
+
+PROBLEM 2: 
+
+Write PROLOG programs which define the following predicates:
+
+(a) merge(L1,L2,L) 
+    to merge two sorted lists L1 and L2 producing the third sorted list L. For example,
+    merge([2,5,8],[1,7,10],[1,2,5,7,8,10]) is true.
+
+(b) delete(X,L,L1)
+    to delete all occurrences of X from a list L producing the list L1. For example, 
+    delete(a,[a,b,[a,d],c],L1) is true when L1 is [b,[d],c].
+
+Test your programs on a number of examples.
+
+PROBLEM 3. Write a PROLOG program that merges two binary search trees.
+In your program, use the predicate:
+
+   merge(T, T1, T2)  
+   which is true when T2 is the result of inserting every node from T1 into T.
+                               
+Include some tests with your solution.
+
+PROBLEM 4. This problem deals with the implementation of the resolution rule for Propositional Logic
+in PROLOG.
+
+Let us represent propositional logic literals as integers: positive literals are integers > 0 while
+negative literals are integers < 0. A clause is just a list of literals as in these examples:
+        [-1,2,3] is the clause  -1v2v3
+        []       is the empty clause. 
+
+Implement the following predicates in PROLOG:
+
+(a) resolve(C1,C2,P,Res) 
+    which returns the resolvent Res of C1 and C2 upon P, if it exists.
+(b) sub(C1,C2)
+    which is true if the clause C1 subsumes C2.
+(c) taut(C)
+    which is true if C is a tautological clause.
+
+Include some tests with your solutions.
