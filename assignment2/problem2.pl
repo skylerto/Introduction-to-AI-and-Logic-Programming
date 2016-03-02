@@ -1,44 +1,39 @@
-% first(X, L). :- first(X, []).
-% first(X, L) :- first(X, [X|L]).
-
-% if the first element in L1 is less than the element in L2, add this element to L
-%merge([X|L1],[Y|L2],L) :- X<Y, merge(L1,[Y|L2],[X|L]).
-
-% if the first element in L2 is less than the element in L1, add this element to L
-%merge([X|L1],[Y|L2],L) :- X>Y, merge([X|L1],L2,[Y|L]).
-
-% merge(X,[Y|L2],[X|L]) :- X<Y, merge([],L2,[X|L]).
-% merge([X|L1],[Y|L2],[]) :- X<Y, merge(L1,L2,[X, Y]).
-% merge([X|L1],[Y|L2],[]) :- X>Y, merge(L1,L2,[Y, X]).
-% merge(X, Y, [X,Y]) :- X < Y.
-% merge(X, Y, [Y,X]) :- X > Y.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% Merge a sorted list %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
 % CASE 1: If the empty lists.
-merge([],[],L) :- L.
-merge([],[Y],L) :- merge([],[],[L|Y]).
-merge([X],[],L) :- merge([],[],[L|X]).
+merge([],[],[]).
 
-% CASE 2: The Lists contain 1 Element
-merge([X],[Y],[X,Y]) :- lt(X,Y).
-merge([X],[Y],[Y,X]) :- lt(Y,X).
+% CASE 2: The lists contain 1 element
+merge([],[Y],[Y|L]) :- merge([],[],L).
+merge([X],[],[X|L]) :- merge([],[],L).
 
-merge([X|L1],[Y|L2],L) :- lt(X,Y),      merge(L1,[Y|L2],[L|X]).
+% CASE 3: The first element, X, in L1 is less than the first element, Y, in L2, add X to L and merge on L1', L2, and L' where L1' is `L1 \ X`, L2 stays the same and L' is `L u X`
+merge([X|L1],[Y|L2],[X|L]) :- lt(X, Y), merge(L1,[Y|L2],L).
 
-merge([X|L1],[Y|L2],L) :- lt(Y,X), merge([X|L1],L2,[L|Y]).
+% CASE 4: The first element, X, in L1 is greater than or equal to the first element, Y, in L2, add Y to L and merge on L1, L2', and L' where L1 stays the same, L2' is `L2 \ Y` and L' is `L u Y`
+merge([X|L1],[Y|L2],[Y|L]) :- merge([X|L1],L2,L).
 
-
-
-% merge([X|L1],[],L) :- merge(L1,[],[X|L]).
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Helper Predicates %%
+%%%%%%%%%%%%%%%%%%%%%%%
 % True if X < Y is true.
-lt(X, Y) :- true, X<Y.
+lt(X, Y) :- X<Y.
 
-% Define first Element
-first([X], X).
-first([Y|_], Y).
-first([], _) :- fail.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Delete all occurrences from a list %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CASE 1: Empty
+delete(_,[],[]).
+
+% CASE 2: List of a list
+delete(X,[[_|L1]|L2],[L1|L]) :- delete(X,L2,L).
+
+% CASE 3: Recursive Case
+delete(X,[X|L1],L) :- delete(X,L1,L).
+delete(X,[H|L1],[H|L]) :- delete(X,L1,L).
