@@ -1,0 +1,34 @@
+% Action definitions for "eat" planning scenario
+
+can(open(X),[cl(X),?]):-appliance(X).
+add(open(X),?).
+del(open(X),[?]).
+
+can(close(X),[?,?]):-appliance(X).
+add(close(X),[closed(X)]).  
+del(close(X),?).  
+
+can(take(X,From),[cl(From),opened(From),?]):-appliance(From).
+add(take(X,From),[?]).  
+del(take(X,From),?).
+
+can(put(C,In),[?,?,?]):-appliance(In).
+add(put(C,In),[in(C,In)]).  
+del(put(C,In),[?]).
+
+can(bake(X),[cl(?),?,closed(mo)]):-appliance(From), food(X).
+add(bake(X),?).  
+del(bake(X),?).
+
+can(eat(X),[?,baked(X)]).
+add(eat(X),[?]).  
+del(eat(X),?). 
+
+can(move(To),[cl(X)]):-appliance(To).
+add(move(To),[cl(To)]).  
+del(move(To),[?]). 
+
+appliance(mo).
+appliance(ref).
+food(chicken).
+food(pizza).
