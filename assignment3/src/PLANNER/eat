@@ -1,4 +1,4 @@
-% Initial State
+% Initial State, dynamic definitions
 :- dynamic(closed/1).
 :- dynamic(opened/1).
 :- dynamic(cl/1).
@@ -15,8 +15,6 @@ in(chicken, ref).
 in(pizza, ref).
 
 % Actions
-
-
 open(X) :- assert(opened(X)), retract(closed(X)).
 h_close(X) :- assert(closed(X)), retract(opened(X)).
 take(X, From) :- has(X), not(in(X, From)).
