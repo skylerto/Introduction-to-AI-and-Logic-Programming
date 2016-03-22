@@ -1,3 +1,30 @@
+% Initial State
+:- dynamic(closed/1).
+:- dynamic(opened/1).
+:- dynamic(cl/1).
+:- dynamic(in/2).
+:- dynamic(not_hungry/0).
+:- dynamic(has/1).
+:- dynamic(baked/1).
+
+closed(ref).
+closed(mo).
+cl(mo).
+in(book, ref).
+in(chicken, ref).
+in(pizza, ref).
+
+% Actions
+
+
+open(X) :- assert(opened(X)), retract(closed(X)).
+h_close(X) :- assert(closed(X)), retract(opened(X)).
+take(X, From) :- has(X), not(in(X, From)).
+putIn(C,In) :- not(has(C)), assert(in(C,In)).
+bake(X) :- assert(baked(X)).
+eat(X) :- assert(not_hungry).
+move(To) :- assert(cl(To)).
+
 % Action definitions for "eat" planning scenario
 
 can(open(X),[cl(X),?]):-appliance(X).
