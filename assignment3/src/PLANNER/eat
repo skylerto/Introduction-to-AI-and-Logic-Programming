@@ -11,49 +11,60 @@ closed(ref).
 closed(mo).
 cl(mo).
 in(book, ref).
-in(chicken, ref).
 in(pizza, ref).
+in(chicken, ref).
 
 % Actions
-open(X) :- assert(opened(X)), retract(closed(X)).
-h_close(X) :- assert(closed(X)), retract(opened(X)).
-take(X, From) :- has(X), not(in(X, From)).
-putIn(C,In) :- not(has(C)), assert(in(C,In)).
-bake(X) :- assert(baked(X)).
-eat(X) :- assert(not_hungry).
-move(To) :- assert(cl(To)).
+open(X) :- closed(X), assert(opened(X)), retract(closed(X)), !.
+h_close(X) :- opened(X), assert(closed(X)), retract(opened(X)), !.
+take(X, From) :- cl(From), opened(From), in(X, From), assert(has(X)),
+  retract(in(X, From)), !.
+putIn(C,In) :- cl(In), has(C), opened(In), assert(in(C,In)), retract(has(C)), !.
+bake(X) :- has(X), closed(mo), assert(baked(X)), retract(has(X)), !.
+eat(X) :- not(not_hungry), baked(X), opened(mo), assert(not_hungry), retract(opened(mo)), !.
+move(To) :- assert(cl(To)), !.
 
 % Action definitions for "eat" planning scenario
 
-can(open(X),[cl(X),?]):-appliance(X).
-add(open(X),?).
-del(open(X),[?]).
+% Action: open(X).
+can(open(X),[cl(X),closed(X)]):-appliance(X).
+add(open(X),[opened(X)]). % Facts that become true after executing the Action.
+del(open(X),[closed(X)]). % Facts the become false after executing the Action.
 
-can(close(X),[?,?]):-appliance(X).
-add(close(X),[closed(X)]).  
-del(close(X),?).  
+% Action: close(X).
+can(close(X),[cl(X),opened(X)]):-appliance(X).
+add(close(X),[closed(X)]). % Facts that become true after executing the Action.
+del(close(X),[opened(X)]). % Facts the become false after executing the Action.
 
-can(take(X,From),[cl(From),opened(From),?]):-appliance(From).
-add(take(X,From),[?]).  
-del(take(X,From),?).
+% Action: take(X, From).
+can(take(X,From),[cl(From),opened(From),in(X, From)]):-appliance(From).
+add(take(X,From),[has(X), closed(From)]). % Facts that become true after executing the Action.
+del(take(X,From),[in(X,From), opened(From)]). % Facts the become false after executing the Action.
 
-can(put(C,In),[?,?,?]):-appliance(In).
-add(put(C,In),[in(C,In)]).  
-del(put(C,In),[?]).
 
-can(bake(X),[cl(?),?,closed(mo)]):-appliance(From), food(X).
-add(bake(X),?).  
-del(bake(X),?).
+% Action: put(C,In).
+can(put(C,In),[cl(In),has(C),opened(In)]):-appliance(In).
+add(put(C,In),[in(C,In)]). % Facts that become true after executing the Action.
+del(put(C,In),[has(C)]). % Facts the become false after executing the Action.
 
-can(eat(X),[?,baked(X)]).
-add(eat(X),[?]).  
-del(eat(X),?). 
+% Action: bake(X).
+can(bake(X),[cl(mo),has(X),closed(mo)]):-appliance(From), food(X).
+add(bake(X),[baked(X), in(X, mo)]). % Facts that become true after executing the Action.
+del(bake(X),[has(X)]). % Facts the become false after executing the Action.
 
+% Action: eat(X).
+can(eat(X),[has(X), baked(X)]) :- food(X).
+add(eat(X),[not_hungry]). % Facts that become true after executing the Action.
+del(eat(X),[has(X)]).
+
+%% Action: move(To).
 can(move(To),[cl(X)]):-appliance(To).
-add(move(To),[cl(To)]).  
-del(move(To),[?]). 
+add(move(To),[cl(To)]). % Facts that become true after executing the Action.
+del(move(To),[cl(X)]). % Facts the become false after executing the Action.
 
 appliance(mo).
 appliance(ref).
 food(chicken).
 food(pizza).
+
+:- include('planner').
