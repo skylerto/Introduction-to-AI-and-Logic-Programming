@@ -68,3 +68,8 @@ food(chicken).
 food(pizza).
 
 :- include('planner').
+
+% Test
+% Run the test: plan([closed(ref), closed(mo), cl(mo),in(book,ref), in(pizza, ref), in(chicken,ref)],[not_hungry],Plan,X).
+
+:- write("RUN -- plan([closed(ref), closed(mo), cl(mo), in(book, ref), in(pizza, ref), in(chicken, ref)], [not_hungry], Plan, X) -- TO GET A PLAN").
