@@ -1,0 +1,119 @@
+EECS 3401, Assignment 2, Solutions
+
+PROBLEM 1. 2%
+        A: 0.7%
+        B: 0.3%
+        C: 1%
+
+A:
+c1.  gf(X,Y):- f(X,Z),p(Z,Y)
+c2.  p(X,Y):-f(X,Y)
+c2'. p(X,Y):-m(X,Y)
+c3.  f(adam,beth):-
+c4.  f(adam,bill):-
+c5.  m(beth,chris):-
+c6.  f(bill,ann):-
+
+B:
+     :-gf(adam,X)
+     
+C:
+                        :-gf(adam,X)
+                            *
+                            | c1=gf(X',Y):- f(X',Z),p(Z,Y)
+                            | e0=[X'/adam, X/Y]
+                    :- f(adam,Z),p(Z,Y)
+                            *
+          c3, e1=[Z/beth] /   \  c4, e1[Z/bill]
+                         /     \
+                        /       \
+                 :-p(beth,Y)    p(bill,Y)
+                      *                 *
+                     /  \              /  \
+    c2': X"/X, Y/Y" /    \ c2     c2' /    \ c2
+ e3=[Y"/Y,X"/beth] /      \          /      \
+         :-m(beth,Y) :-f(beth,Y) :-m(bill,Y) :-f(bill,Y)
+                  *         *        *         * 
+  c5, e4=[Y/chris]|         |        |         | c6, e=[Y/ann]
+                 :-       fail     fail        :-
+              Y=X=chris                       Y=X=ann
+
+
+PROBLEM 2: 2.5% (1% for both (a) and (b), 0.5% for tests)
+
+(a) 
+    merge([],L,L).               % [] merged with L is L
+    merge(L,[],L).               % L merged with [] is L
+    merge([X1|L1],[X2|L2],[X1|L]):-X1 =< X2,              % X1 =< X2, so X1 is the first in the merged list
+                                   merge(L1,[X2|L2],L).   
+    merge([X1|L1],[X2|L2],[X2|L]):-X1 > X2,               % X1 > X2, so X2 is the first in the merged list
+                                   merge([X1|L1],L2,L).
+                                   
+(b) dt(X,L,L1) is true when X is recursively deleted from L resulting in list L1
+
+dt(X,[],[]).                      % nothing to delete from the empty list
+dt(A,[A|L],L1):- dt(A,L,L1).      % deleting  A from [A|L] results in L
+dt(A,[[Y|R]|L],[L1|L2]):- dt(A,[Y|R],L1), dt(A,L,L2). % deleting from a list whose first element
+                                                      % is a list identified here as [Y|R]
+dt(A,[Y|L],[Y|L1]):-dt(A,L,L1).   % deleting A from list [Y|L] when the first element, Y, is not
+                                  % a list
+
+
+PROBLEM 3. 1.5% (1% for good program and 0.5% for tests)
+
+   merge(nil,T,T).   
+   merge(T,nil,T).                   
+   merge(t(L,X,R),T,Res):- add(X,T,T1), merge(L,T1,T2), merge(R,T2,Res).
+  
+Notes: 
+(a) the first clause defines the merging of the empty tree with any tree T (the result is T);
+(b) the 2nd clause defines the merging of t(L,X,R) with T: first add X to T, resulting in T1;
+    then, merge L with T1 resulting in T2; finally, merging R with T2 results in the merged t(L,X,R)
+    and T;
+(c) procedure add(X,T,T1) inserts X into the search tree resulting in the search tree T2;
+    it was discussed in class:
+       
+       add(X,nil,t(nil,X,nil)).  % adding X to the empty tree
+       add(X,t(L,X,R),t(L,X,R)). % no copies of X
+       add(X,t(L,Y,R),t(L1,Y,R)) :- X<Y, add(X,L,L1). % adding X to left subtree of t(L,Y,R)
+       add(X,t(L,Y,R),t(L,Y,R1)) :- X>Y, add(X,R,R1). % adding X to right subtree of t(L,Y,R)
+
+PROBLEM 4. 4%
+       (a) 1.5% for good program and 0.25% for tests
+       (b) 1% for good program and 0.25% for tests
+       (c) 0.75% for good program and 0.25% for tests
+
+(a) 
+   resolve(C1,C2,P,Res) :- member(P,C1),                  % P is in C1
+                           member(Y,C2), P =:= (-1*Y),    % -P is in C2
+                           dt(P,C1,D1), dt(Y,C2,D2),      % delete complementary literals from C1 and C2
+                           subtract(D1,D2,D),             % D=D1-D2, eliminate copies of literals from D1
+                           conc(D,D2,Res).                % Res=D union D2 
+                            
+   resolve(C1,C2,P,Res) :- member(P,C2),                  % P is in C2 
+                           member(Y,C1), P =:= (-1*Y),    % -P is in C1
+                           dt(Y,C1,D1), dt(P,C2,D2),      % delete complementary literals from C1 and C2 
+                           subtract(D1,D2,D),             % D=D1-D2, eliminate copies of literals from D1
+                           conc(D,D2,Res).                % Res=D union D2
+                           
+    Notes:  
+     (1) conc is the concatenation predicate discussed in class
+     (2) subtract(L1,L2,R) (which is true when R=L1-L2) is predefined in SWI Prolog or can be defined,
+         e.g. by the following clauses:
+  
+     subtract([],X,[]).
+     subtract([H|L],L1,R):- member(H,L1), subtract(L,L1,R).
+     subtract([H|L],L1,[H|R]):- subtract(L,L1,R).
+                                                   
+(b)  
+ sub([],[]).                            % empty clause subsumes itself
+ sub([X|Sub],[X|Rest]):- sub(Sub,Rest). % if a Sub subsumes Rest, then [X|Sub] subsumes [X|Rest]
+ sub(Sub,[X|Rest]):- sub(Sub,Rest).     % if Sub subsumes Rest, then Sub a larger clause [X|Rest]
+
+(c) taut(C):- member(X,C), member(Y,C), X=:= (-1*Y).
+    
+    in this clause:
+    (1) member(X,L) is the list membership predicate discussed in class;
+    (2) =:= is a predefined predicate which is true when both arguments evaluate into the same
+        number; so X=:= (-1*Y), if true, means that X and Y are complementary
+
