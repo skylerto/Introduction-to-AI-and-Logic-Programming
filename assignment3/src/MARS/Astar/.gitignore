@@ -1,0 +1,7 @@
+# VIM
+/**/*.swp
+
+# ECLIPSE
+.classpath
+.project
+.settings/
