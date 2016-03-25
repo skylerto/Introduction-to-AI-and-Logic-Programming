@@ -2,6 +2,7 @@ package astar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -41,8 +42,8 @@ public class Path {
 		this.adj = adj;
 		this.start = start;
 		this.end = end;
-		this.weights = new ArrayList<Integer>(Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
-		this.arrows = new ArrayList<Integer>(Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
+		this.weights = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));//Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
+		this.arrows = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));//Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
 		this.path = this.createPath();
 		this.value = 0;
 		for (Integer i : path) {

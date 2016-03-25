@@ -40,9 +40,7 @@ public class Main {
 		// adj.put(7, new ArrayList<Integer>(Arrays.asList(6, 8)));
 		// adj.put(8, new ArrayList<Integer>(Arrays.asList(7)));
 
-		/* MARS */
-		int start = 8; // A
-		int end = 0; // B or C
+		
 		List<Integer> graph = new ArrayList<Integer>(Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 				1, 1, 1, 1, 3, 1, 1, 1, 2, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 2, 2,
 				2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -675,9 +673,23 @@ public class Main {
 		adj.put(574, new ArrayList<Integer>(Arrays.asList(542, 573, 575)));
 		adj.put(575, new ArrayList<Integer>(Arrays.asList(543, 574)));
 
+		/* MARS */
+		// A to B
+		int start = 513;
+		int end = 543;
+		
+		// A to C
 		Path path = new Path(graph, adj, start, end);
-		System.out.println("PATH: " + path.getPath().toString());
-		System.out.println("VALUE: " + path.getValue());
+		System.out.println("A to B -- PATH: " + path.getPath().toString());
+		System.out.println("A to B -- VALUE: " + path.getValue());
 
+		// A to B
+		int startB = 513;
+		int endB = 24;
+		
+		// A to C
+		Path pathB = new Path(graph, adj, startB, endB);
+		System.out.println("A to C -- PATH: " + pathB.getPath().toString());
+		System.out.println("A to C -- VALUE: " + pathB.getValue());
 	}
 }
