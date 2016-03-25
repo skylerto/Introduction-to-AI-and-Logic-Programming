@@ -8,6 +8,12 @@ import java.util.Map;
 
 import astar.Path;
 
+/**
+ * Notebook test case.
+ * 
+ * @author Skyler Layne © 2016
+ *
+ */
 public class Test {
 
 	public static void main(String[] args) {
