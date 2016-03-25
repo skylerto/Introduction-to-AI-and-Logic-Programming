@@ -1,49 +1,58 @@
 package astar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
- * Definition of a path.
+ * Definition of a path, the path is calculated with a heuristic function.
  * 
  * @author Skyler Layne © 2016
  *
  */
 public class Path {
 
+	// The index to start.
 	private int start;
+
+	// The index to end.
 	private int end;
+
+	// The cost of taking the path.
 	private int value;
+
+	// The graph to be traversed.
 	private List<Integer> graph;
-	private Map<Integer, List<Integer>> adj;
+
+	// adjacent matrix, for determining reachable nodes.
+	private Map<Integer, List<Integer>> adjacent;
 
 	// Weights stores the wait which is meant to reach that index. [g(n)]
 	private List<Integer> weights;
 
-	// Indexes in arrows refers to the node which lead to the visit
+	// Indexes in arrows refers to the node which lead to the visit/
 	private List<Integer> arrows;
 
+	// The path to be taken.
 	private List<Integer> path;
 
 	/**
 	 * Create a path object.
 	 * 
 	 * @param graph
-	 * @param adj
+	 * @param adjacent
 	 * @param start
 	 * @param end
 	 */
-	public Path(List<Integer> graph, Map<Integer, List<Integer>> adj, int start, int end) {
+	public Path(List<Integer> graph, Map<Integer, List<Integer>> adjacent, int start, int end) {
 		this.graph = graph;
-		this.adj = adj;
+		this.adjacent = adjacent;
 		this.start = start;
 		this.end = end;
-		this.weights = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));//Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
-		this.arrows = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));//Arrays.asList(-1, -1, -1, -1, -1, -1, -1, -1, -1));
+		this.weights = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));
+		this.arrows = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));
 		this.path = this.createPath();
 		this.value = 0;
 		for (Integer i : path) {
@@ -52,64 +61,79 @@ public class Path {
 	}
 
 	/**
-	 * Gets a list of indexes which represent the path. Uses the manhatten
+	 * Gets a list of indexes which represent the path. Uses the Manhattan
 	 * distance.
 	 * 
 	 * @return
 	 */
 	private List<Integer> createPath() {
+
+		// The solution path to be constructed.
 		List<Integer> solution = new ArrayList<Integer>();
 
+		// PriorityQueue keeps track of the most optimal choice.
+		PriorityQueue<Node> pq = new PriorityQueue<Node>();
+
+		// No cost associated with the start node.
 		weights.set(start, 0);
 
-		PriorityQueue<Node> pq = new PriorityQueue<Node>();
+		// Create a node on the start node and add it to the PriorityQueue.
 		Node n = new Node(start, 0);
 		pq.add(n);
 
+		// Index of the last node to be processed
 		Integer finalIndex = 0;
+
+		// Loop through the PriorityQueue.
 		while (pq.size() > 0) {
+
+			// The the first node off the PriorityQueue
 			Node current = pq.poll();
+
+			// Update the index of the current node.
 			Integer currentIndex = current.getIndex();
 
-			// If we've reached the end we're done.
+			// Check if we've reached the end.
 			if (currentIndex.equals(end)) {
 				break;
 			}
 
-			// get a list of the adj nodes.
-			List<Integer> adjNodes = adj.get(currentIndex);
+			// Get a list of the adjacent nodes, loop over all the adjacent
+			// nodes
+			List<Integer> adjacentNodes = adjacent.get(currentIndex);
+			for (Integer index : adjacentNodes) {
 
-			// Loop over all the adj nodes
-			for (Integer index : adjNodes) {
-				if (index != 100) {
+				// Calculate the cost of that node.
+				Integer cost = weights.get(currentIndex) + graph.get(index);
+				float calc = 0;
 
-					// Calculate the cost of that node.
-					Integer cost = weights.get(currentIndex) + graph.get(index);
-					float calc = 0;
+				// Check if we should process the node.
+				boolean process = cost < weights.get(index) || weights.get(index) == -1;
+				if (process) {
+					// drop an arrow
+					arrows.set(index, currentIndex);
 
-					boolean process = cost < weights.get(index) || weights.get(index) == -1;
-					if (process) {
-						// drop an arrow
-						arrows.set(index, currentIndex);
-
-						weights.set(index, cost);
-						calc = cost + (float) (Math.abs(end - index) * 1.001);
-						Node other = new Node(index, calc);
-						pq.add(other);
-						finalIndex = index;
-					}
-
+					// Update the weight associated with this choice, calculate
+					// the cost of that decision, add it to the PriorityQueue.
+					weights.set(index, cost);
+					calc = cost + (float) (Math.abs(end - index) * 1.001);
+					Node other = new Node(index, calc);
+					pq.add(other);
+					finalIndex = index;
 				}
-			}
+
+			} // end adjacent loop
 
 		} // end loops
 
 		// Create the path:
-		do {
+		do
+
+		{
 			finalIndex = arrows.get(finalIndex);
 			solution.add(finalIndex);
 		} while (finalIndex != start);
-
+		Collections.reverse(solution);
 		return solution;
 	}
 
