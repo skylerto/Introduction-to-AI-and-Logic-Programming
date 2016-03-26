@@ -92,6 +92,9 @@ public class Path {
 
 			// The the first node off the PriorityQueue
 			Node current = pq.poll();
+			if (current == null) {
+				current = pq.poll();
+			}
 
 			// Update the index of the current node.
 			Integer currentIndex = current.getIndex();
@@ -143,6 +146,7 @@ public class Path {
 			finalIndex = arrows.get(finalIndex);
 			solution.add(finalIndex);
 		} while (finalIndex != start);
+
 		Collections.reverse(solution);
 		return solution;
 	}
@@ -166,7 +170,7 @@ public class Path {
 	}
 
 	private float admissibleHeuristic(double index, double end) {
-		return (float) Math.sqrt((Math.abs(Math.pow(end, 2) + Math.pow(index, 2))));
+		return (float) Math.sqrt(Math.abs(end - index));
 	}
 
 }

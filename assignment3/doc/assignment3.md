@@ -6,8 +6,8 @@
 
 # PROBLEM 1: Planner
 
-The `planner` file has not been modified for this project and is available in the
-appendix. However, the `eats` file has been modified and is available below.
+The `planner` file has not been modified for this project, for this reason I
+have chosen to omit it. However, the `eats` file has been modified and is available below.
 
 ``` prolog
 % Initial State, dynamic definitions
@@ -100,7 +100,9 @@ food(pizza).
 :- write("RUN -- plan([closed(ref), closed(mo), cl(mo), in(book, ref), in(pizza, ref), 
   in(chicken, ref)], [not_hungry], Plan, X) -- TO GET A PLAN").
 ```
-Figure 1: Prolog eats code
+Snippet 1: Eats
+
+\newpage
 
 # PROBLEM 2: Mars
 
@@ -108,9 +110,29 @@ I have chosen to implement `A*` in Java, the following implementation expresses
 the definition. I have chosen to flatten the Map into a linear data structure,
 in this case we use `ArrayList` to store the cost of each node in the graph. We
 also define a `Map` to store the adjacency matrix where the key is a given
-node in the graph, and the value is a list of reachable nodes. This definition
-can be viewed from Figure 4.
+node in the graph, and the value is a list of reachable nodes. A pictorial
+representation shows the indexes of the data structure. The definition of the definition
+can be viewed in Snippet 4.
 
+## Mars Occupancy Grid
+
+At this point there are no obstacles, only points which are more difficult to navigate. The scale ranges from 0-5, where 0 is the starting point, 5 is the most difficult terrain to navigate.  
+  
+![Mars Occupancy Grid](../src/MARS/mars-graph.png)
+  
+
+  
+## Mars Data Structure
+
+Position `A` is represented by the index 513, `B` by the index 543, and `C` by the
+index 24.  
+  
+![Mars Array](../src/MARS/mars-landscape.png)  
+  
+\newpage
+
+## Implementation
+  
 The Java code below shows a class with a private method
 `createPath()` invoked from the constructor, this method defines the greedy
 algorithm used in `A*` to calculate the shortest path. 
@@ -133,6 +155,41 @@ of the nodes in the graph. It holds the index of the node as well as the cost
 associated with that node. These nodes are stored in a Priority Queue and as
 stored based upon the cost of choosing that node.
 
+## Results
+  
+After executing the code, we receive the following arrays:
+
+```
+Admissible Path from A to B: 
+	[513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542]
+	Cost of path: 41
+
+Nonadmissible Path from A to B: 
+	[513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542]
+	Cost of path: 41
+
+Admissible Path from A to C: 
+	[513, 514, 515, 516, 517, 518, 486, 454, 422, 390, 358, 326, 294, 262, 230, 166, 134, 102, 103, 104, 72, 40, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+	Cost of path: 45
+
+Nonadmissible Path from A to C: 
+	[513, 514, 515, 516, 517, 518, 486, 454, 422, 390, 358, 326, 294, 262, 230, 166, 134, 102, 103, 104, 72, 40, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+	Cost of path: 45
+```
+
+The results to both the admissible and non admissible are the same in this case as the optimal decision for each region is a choice of 1. This results in the following paths:
+
+### Path Traversal from A to B
+
+![Path traversal from A to B](../src/MARS/a-to-b.png)
+\newpage
+
+### Path Traversal from A to C
+![Path traversal from A to C](../src/MARS/a-to-c.png)
+
+\newpage
+
+## The Code
 ``` java
 pacckage astar;
 
@@ -302,12 +359,12 @@ public class Path {
 	}
 
 	private float admissibleHeuristic(double index, double end) {
-		return (float) Math.sqrt((Math.abs(Math.pow(end, 2) + Math.pow(index, 2))));
+    return (float) Math.sqrt(Math.abs(end - index));
 	}
 
 }
 ```
-**Figure 2**: Algorithm
+**Snippet 2**: Algorithm
 
 ``` java
 package astar;
@@ -355,7 +412,7 @@ public class Node implements Comparable<Object> {
 	}
 }
 ```
-**Figure 3**: Helper
+**Snippet 3**: Helper
 
 ``` java
 
@@ -1039,4 +1096,4 @@ public class Main {
 	}
 }
 ```
-**Figure 4**: Main
+**Snippet 4**: Main
