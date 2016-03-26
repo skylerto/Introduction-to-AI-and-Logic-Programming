@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 /**
  * Definition of a path, the path is calculated with a heuristic function.
  * 
- * @author Skyler Layne © 2016
+ * @author Skyler Layne, 2016
  *
  */
 public class Path {
@@ -124,7 +124,7 @@ public class Path {
 					if (admissible) {
 						calc = cost + admissibleHeuristic(index, end);
 					} else {
-						calc = cost;
+						calc = cost * Math.abs(end - index);
 					}
 
 					Node other = new Node(index, calc);

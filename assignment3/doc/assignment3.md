@@ -1,4 +1,365 @@
-package main;
+# EECS 3401 ASSIGNMENT 3 SOLUTIONS
+**Deadline:** March. 30, 2016  
+**Student:** Skyler Layne (cse23170, 212166906)  
+
+\newpage
+
+# PROBLEM 1: Planner
+
+The `planner` file has not been modified for this project and is available in the
+appendix. However, the `eats` file has been modified and is available below.
+
+``` prolog
+% Initial State, dynamic definitions
+:- dynamic(closed/1).
+:- dynamic(opened/1).
+:- dynamic(cl/1).
+:- dynamic(in/2).
+:- dynamic(not_hungry/0).
+:- dynamic(has/1).
+:- dynamic(baked/1).
+
+closed(ref).
+closed(mo).
+cl(mo).
+in(book, ref).
+in(pizza, ref).
+in(chicken, ref).
+
+% Actions
+open(X) :- closed(X), assert(opened(X)), 
+  retract(closed(X)), !. 
+
+h_close(X) :- opened(X), assert(closed(X)), 
+  retract(opened(X)), !.  
+
+take(X, From) :- cl(From), opened(From), in(X, From), 
+  assert(has(X)), retract(in(X, From)), !.
+
+putIn(C,In) :- cl(In), has(C), opened(In), assert(in(C,In)), 
+  retract(has(C)), !.
+
+bake(X) :- has(X), closed(mo), assert(baked(X)), 
+  retract(has(X)), !.
+
+eat(X) :- not(not_hungry), baked(X), opened(mo), 
+  assert(not_hungry), retract(opened(mo)), !.
+
+move(To) :- assert(cl(To)), !.
+
+% Action definitions for "eat" planning scenario
+
+% Action: open(X).
+can(open(X),[cl(X),closed(X)]):-appliance(X).
+% Facts that become true after executing the Action.
+add(open(X),[opened(X)]). 
+% Facts the become false after executing the Action.
+del(open(X),[closed(X)]). 
+
+% Action: close(X).
+can(close(X),[cl(X),opened(X)]):-appliance(X).
+add(close(X),[closed(X)]). 
+del(close(X),[opened(X)]). 
+
+% Action: take(X, From).
+can(take(X,From),[cl(From),opened(From),in(X, From)]):-appliance(From).
+add(take(X,From),[has(X), closed(From)]). 
+del(take(X,From),[in(X,From), opened(From)]). 
+
+% Action: put(C,In).
+can(put(C,In),[cl(In),has(C),opened(In)]):-appliance(In).
+add(put(C,In),[in(C,In)]). 
+del(put(C,In),[has(C)]). 
+
+% Action: bake(X).
+can(bake(X),[cl(mo),has(X),closed(mo)]):-appliance(From), food(X).
+add(bake(X),[baked(X), in(X, mo)]). 
+del(bake(X),[has(X)]).
+
+% Action: eat(X).
+can(eat(X),[has(X), baked(X)]) :- food(X).
+add(eat(X),[not_hungry]).
+del(eat(X),[has(X)]).
+
+%% Action: move(To).
+can(move(To),[cl(X)]):-appliance(To).
+add(move(To),[cl(To)]). 
+del(move(To),[cl(X)]).
+ 
+appliance(mo).
+appliance(ref).
+food(chicken).
+food(pizza).
+
+:- include('planner').
+
+% Test
+% Run the test: plan([closed(ref), closed(mo), cl(mo),in(book,ref), in(pizza, ref), 
+  in(chicken,ref)],[not_hungry],Plan,X).
+
+:- write("RUN -- plan([closed(ref), closed(mo), cl(mo), in(book, ref), in(pizza, ref), 
+  in(chicken, ref)], [not_hungry], Plan, X) -- TO GET A PLAN").
+```
+Figure 1: Prolog eats code
+
+# PROBLEM 2: Mars
+
+I have chosen to implement `A*` in Java, the following implementation expresses
+the definition. I have chosen to flatten the Map into a linear data structure,
+in this case we use `ArrayList` to store the cost of each node in the graph. We
+also define a `Map` to store the adjacency matrix where the key is a given
+node in the graph, and the value is a list of reachable nodes. This definition
+can be viewed from Figure 4.
+
+The Java code below shows a class with a private method
+`createPath()` invoked from the constructor, this method defines the greedy
+algorithm used in `A*` to calculate the shortest path. 
+
+Within the same class, a method `admissibleHeuistic()` is also defined.
+It only gets called when the constructor is passed a boolean to determine if
+the calculation should be done admissibly or not. This method returns a calculation
+of the Manhattan distance from the current index within the search to the final
+index of the goal. The Manhattan distance is a commonly used approximation of
+the distance left to travel. It is admissible due to the fact that it assumes
+each node on the graph has a cost association of 1, therefore it never over
+estimates.
+
+On the other hand, when the boolean flag is set to false, a non-admissible search
+strategy is used. It estimates that with every choice, the cost of the remaining
+path as each node having the same cost of the current node.
+
+To do these calculation I have implemented a `Node` class which represents each
+of the nodes in the graph. It holds the index of the node as well as the cost
+associated with that node. These nodes are stored in a Priority Queue and as
+stored based upon the cost of choosing that node.
+
+``` java
+pacckage astar;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+
+/**
+ * Definition of a path, the path is calculated with a heuristic function.
+ * 
+ * @author Skyler Layne, 2016
+ *
+ */
+public class Path {
+
+	// The index to start.
+	private int start;
+
+	// The index to end.
+	private int end;
+
+	// The cost of taking the path.
+	private int value;
+
+	// The graph to be traversed.
+	private List<Integer> graph;
+
+	// adjacent matrix, for determining reachable nodes.
+	private Map<Integer, List<Integer>> adjacent;
+
+	// Weights stores the wait which is meant to reach that index. [g(n)]
+	private List<Integer> weights;
+
+	// Indexes in arrows refers to the node which lead to the visit/
+	private List<Integer> arrows;
+
+	// The path to be taken.
+	private List<Integer> path;
+
+	private Boolean admissible;
+
+	/**
+	 * Create a path object.
+	 * 
+	 * @param graph
+	 * @param adjacent
+	 * @param start
+	 * @param end
+	 */
+	public Path(Boolean admissible, List<Integer> graph, Map<Integer, List<Integer>> adjacent, int start, int end) {
+		this.admissible = admissible;
+		this.graph = graph;
+		this.adjacent = adjacent;
+		this.start = start;
+		this.end = end;
+		this.weights = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));
+		this.arrows = new ArrayList<Integer>(Collections.nCopies(graph.size(), -1));
+		this.path = this.createPath();
+		this.value = 0;
+		for (Integer i : path) {
+			this.value += graph.get(i);
+		}
+	}
+
+	/**
+	 * Gets a list of indexes which represent the path. Uses the Manhattan
+	 * distance.
+	 * 
+	 * @return
+	 */
+	private List<Integer> createPath() {
+
+		// The solution path to be constructed.
+		List<Integer> solution = new ArrayList<Integer>();
+
+		// PriorityQueue keeps track of the most optimal choice.
+		PriorityQueue<Node> pq = new PriorityQueue<Node>();
+
+		// No cost associated with the start node.
+		weights.set(start, 0);
+
+		// Create a node on the start node and add it to the PriorityQueue.
+		Node n = new Node(start, 0);
+		pq.add(n);
+
+		// Index of the last node to be processed
+		Integer finalIndex = 0;
+
+		// Loop through the PriorityQueue.
+		while (pq.size() > 0) {
+
+			// The the first node off the PriorityQueue
+			Node current = pq.poll();
+
+			// Update the index of the current node.
+			Integer currentIndex = current.getIndex();
+
+			// Check if we've reached the end.
+			if (currentIndex.equals(end)) {
+				break;
+			}
+
+			// Get a list of the adjacent nodes, loop over all the adjacent
+			// nodes
+			List<Integer> adjacentNodes = adjacent.get(currentIndex);
+			for (Integer index : adjacentNodes) {
+
+				// Calculate the cost of that node.
+				Integer cost = weights.get(currentIndex) + graph.get(index);
+				float calc = 0;
+
+				// Check if we should process the node.
+				boolean process = cost < weights.get(index) || weights.get(index) == -1;
+				if (process) {
+					// drop an arrow
+					arrows.set(index, currentIndex);
+
+					// Update the weight associated with this choice, calculate
+					// the cost of that decision, add it to the PriorityQueue.
+					weights.set(index, cost);
+
+					// Use admissible Heuristic if desired.
+					if (admissible) {
+						calc = cost + admissibleHeuristic(index, end);
+					} else {
+            calc = cost * Math.abs(end - index);
+					}
+
+					Node other = new Node(index, calc);
+					pq.add(other);
+					finalIndex = index;
+				}
+
+			} // end adjacent loop
+
+		} // end loops
+
+		// Create the path:
+		do
+
+		{
+			finalIndex = arrows.get(finalIndex);
+			solution.add(finalIndex);
+		} while (finalIndex != start);
+		Collections.reverse(solution);
+		return solution;
+	}
+
+	/**
+	 * Get the array of paths from leading from end to start.
+	 * 
+	 * @return - the path.
+	 */
+	public List<Integer> getPath() {
+		return this.path;
+	}
+
+	/**
+	 * Get the value of the path.
+	 * 
+	 * @return - the path value.
+	 */
+	public int getValue() {
+		return this.value;
+	}
+
+	private float admissibleHeuristic(double index, double end) {
+		return (float) Math.sqrt((Math.abs(Math.pow(end, 2) + Math.pow(index, 2))));
+	}
+
+}
+```
+**Figure 2**: Algorithm
+
+``` java
+package astar;
+
+/**
+ * Definition of a Single Node in a graph.
+ * 
+ * @author Skyler Layne, 2016
+ *
+ */
+public class Node implements Comparable<Object> {
+	private Integer index;
+	private float weight;
+
+	public Node(Integer index, float weight) {
+		this.setIndex(index);
+		this.weight = weight;
+	}
+
+	@Override
+	public String toString() {
+		return "[NODE] -- " + "INDEX: " + index + " WEIGHT: " + weight;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		Node other = (Node) o;
+
+		float a = this.weight;
+		float b = other.weight;
+
+		if (a > b)
+			return 1;
+		if (a < b)
+			return -1;
+		return 0;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+}
+```
+**Figure 3**: Helper
+
+``` java
+
+ckage main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -677,3 +1038,5 @@ public class Main {
 
 	}
 }
+```
+**Figure 4**: Main

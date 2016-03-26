@@ -3,7 +3,7 @@ package astar;
 /**
  * Definition of a Single Node in a graph.
  * 
- * @author Skyler Layne © 2016
+ * @author Skyler Layne, 2016
  *
  */
 public class Node implements Comparable<Object> {
