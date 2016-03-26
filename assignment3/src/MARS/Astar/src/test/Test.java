@@ -36,7 +36,7 @@ public class Test {
 		adjacent.put(7, new ArrayList<Integer>(Arrays.asList(6, 8)));
 		adjacent.put(8, new ArrayList<Integer>(Arrays.asList(7)));
 
-		Path path = new Path(graph, adjacent, start, end);
+		Path path = new Path(true, graph, adjacent, start, end);
 		System.out.println("Start to Finish -- PATH: " + path.getPath().toString());
 		System.out.println("Start to Finish -- VALUE: " + path.getValue());
 

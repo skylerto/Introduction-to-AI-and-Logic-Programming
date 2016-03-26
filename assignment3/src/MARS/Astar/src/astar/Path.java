@@ -38,6 +38,8 @@ public class Path {
 	// The path to be taken.
 	private List<Integer> path;
 
+	private Boolean admissible;
+
 	/**
 	 * Create a path object.
 	 * 
@@ -46,7 +48,8 @@ public class Path {
 	 * @param start
 	 * @param end
 	 */
-	public Path(List<Integer> graph, Map<Integer, List<Integer>> adjacent, int start, int end) {
+	public Path(Boolean admissible, List<Integer> graph, Map<Integer, List<Integer>> adjacent, int start, int end) {
+		this.admissible = admissible;
 		this.graph = graph;
 		this.adjacent = adjacent;
 		this.start = start;
@@ -116,7 +119,14 @@ public class Path {
 					// Update the weight associated with this choice, calculate
 					// the cost of that decision, add it to the PriorityQueue.
 					weights.set(index, cost);
-					calc = cost + (float) (Math.abs(end - index) * 1.001);
+
+					// Use admissible Heuristic if desired.
+					if (admissible) {
+						calc = cost + admissibleHeuristic(index, end);
+					} else {
+						calc = cost;
+					}
+
 					Node other = new Node(index, calc);
 					pq.add(other);
 					finalIndex = index;
@@ -153,6 +163,10 @@ public class Path {
 	 */
 	public int getValue() {
 		return this.value;
+	}
+
+	private float admissibleHeuristic(double index, double end) {
+		return (float) Math.sqrt((Math.abs(Math.pow(end, 2) + Math.pow(index, 2))));
 	}
 
 }

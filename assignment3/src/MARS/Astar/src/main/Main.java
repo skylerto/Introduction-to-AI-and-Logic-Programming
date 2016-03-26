@@ -657,18 +657,23 @@ public class Main {
 		int start = 513;
 		int end = 543;
 
-		// A to C
-		Path path = new Path(graph, adjacent, start, end);
-		System.out.println("A to B -- PATH: " + path.getPath().toString());
-		System.out.println("A to B -- VALUE: " + path.getValue());
+		Path path = new Path(true, graph, adjacent, start, end);
+		System.out.println("Admissible Path from A to B: \n	" + path.getPath().toString() + "\n	Cost of path: "
+				+ path.getValue());
+		path = new Path(false, graph, adjacent, start, end);
+		System.out.println("Nonadmissible Path from A to B: \n	" + path.getPath().toString() + "\n	Cost of path: "
+				+ path.getValue());
 
-		// A to B
+		// A to C
 		int startB = 513;
 		int endB = 24;
 
-		// A to C
-		Path pathB = new Path(graph, adjacent, startB, endB);
-		System.out.println("A to C -- PATH: " + pathB.getPath().toString());
-		System.out.println("A to C -- VALUE: " + pathB.getValue());
+		Path pathB = new Path(true, graph, adjacent, startB, endB);
+		System.out.println("Admissible Path from A to C: \n	" + pathB.getPath().toString() + "\n	Cost of path: "
+				+ pathB.getValue());
+		pathB = new Path(true, graph, adjacent, startB, endB);
+		System.out.println("Nonadmissible Path from A to C: \n	" + pathB.getPath().toString() + "\n	Cost of path: "
+				+ pathB.getValue());
+
 	}
 }
